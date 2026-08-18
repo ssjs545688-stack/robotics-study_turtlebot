@@ -1,6 +1,6 @@
-# 🤖 ADAS Telos: 하이브리드 다중 로봇 물류 시뮬레이션 프로젝트
+﻿# 🤖 ADAS turtle: 하이브리드 다중 로봇 물류 시뮬레이션 프로젝트
 
-**ADAS Telos**는 대규모 환경 모사에 최적화된 **Gazebo**와 정밀한 접촉 동역학 및 물리 연산에 특화된 **MuJoCo**를 통합한 하이브리드 시뮬레이션 환경입니다. 
+**ADAS turtle**는 대규모 환경 모사에 최적화된 **Gazebo**와 정밀한 접촉 동역학 및 물리 연산에 특화된 **MuJoCo**를 통합한 하이브리드 시뮬레이션 환경입니다. 
 본 프로젝트는 실제 물류 창고와 유사한 대규모 가상 환경에서 4대의 **TurtleBot3 Waffle Pi**가 자율 주행(Nav2) 및 화물 이송 임무를 수행하는 다중 로봇 관제 시스템(FMS)을 검증하는 것을 목표로 합니다.
 
 ---
@@ -21,13 +21,13 @@
 
 | 패키지명 | 주요 역할 | 상태 |
 | --- | --- | --- |
-| `telos_gazebo` | 20x20m 물류 창고 맵(`warehouse.world`) 및 4대의 다중 터틀봇 Spawn 런치 구성 | 완료 (Skeleton) |
-| `telos_mujoco` | 3kg 화물(`box_3kg.xml`) 및 터틀봇 물리(서스펜션/적재함) 특성 모델 | 완료 (Skeleton) |
-| `telos_bridge` | Gazebo와 MuJoCo 간 100Hz Lock-step 위치 및 힘/토크 동기화 C++ 노드 | 완료 (Skeleton) |
-| `telos_navigation` | 각 로봇의 독립된 네임스페이스를 가지는 다중 로봇 Nav2 실행 런치 구성 | 완료 (Skeleton) |
-| `telos_vision` | `/camera/image_raw`를 구독하여 화물/작업자를 검출하는 YOLO Python 노드 | 완료 (Skeleton) |
-| `telos_fms` | 배터리 상태 기반 최적 로봇 3대 할당 및 교차로 양보 트래픽 제어 노드 | 완료 (Skeleton) |
-| `telos_scenario` | 지속가능한 화물 순환(Spawn/Despawn) 및 전력 소모 모델 관리 노드 | 완료 (Skeleton) |
+| `turtle_gazebo` | 20x20m 물류 창고 맵(`warehouse.world`) 및 4대의 다중 터틀봇 Spawn 런치 구성 | 완료 (Skeleton) |
+| `turtle_mujoco` | 3kg 화물(`box_3kg.xml`) 및 터틀봇 물리(서스펜션/적재함) 특성 모델 | 완료 (Skeleton) |
+| `turtle_bridge` | Gazebo와 MuJoCo 간 100Hz Lock-step 위치 및 힘/토크 동기화 C++ 노드 | 완료 (Skeleton) |
+| `turtle_navigation` | 각 로봇의 독립된 네임스페이스를 가지는 다중 로봇 Nav2 실행 런치 구성 | 완료 (Skeleton) |
+| `turtle_vision` | `/camera/image_raw`를 구독하여 화물/작업자를 검출하는 YOLO Python 노드 | 완료 (Skeleton) |
+| `turtle_fms` | 배터리 상태 기반 최적 로봇 3대 할당 및 교차로 양보 트래픽 제어 노드 | 완료 (Skeleton) |
+| `turtle_scenario` | 지속가능한 화물 순환(Spawn/Despawn) 및 전력 소모 모델 관리 노드 | 완료 (Skeleton) |
 
 ---
 
@@ -52,10 +52,10 @@ source install/setup.bash
 ### 2. 시뮬레이터 실행
 ```bash
 # 물류 창고 맵 띄우기 (Gazebo)
-ros2 launch telos_gazebo warehouse.launch.py
+ros2 launch turtle_gazebo warehouse.launch.py
 
 # 새로운 터미널에서 터틀봇 4대 스폰(Spawn)하기
-ros2 launch telos_gazebo spawn_turtlebots.launch.py
+ros2 launch turtle_gazebo spawn_turtlebots.launch.py
 ```
 *(주의: Gazebo UI를 띄우기 위해서는 Windows 호스트에 VcXsrv, Xming 등의 X Server 프로그램이 구동 중이어야 합니다.)*
 

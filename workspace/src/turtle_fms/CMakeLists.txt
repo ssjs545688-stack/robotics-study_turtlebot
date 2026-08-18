@@ -1,5 +1,5 @@
-cmake_minimum_required(VERSION 3.8)
-project(telos_fms)
+﻿cmake_minimum_required(VERSION 3.8)
+project(turtle_fms)
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)

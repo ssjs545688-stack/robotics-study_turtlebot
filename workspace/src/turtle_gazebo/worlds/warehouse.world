@@ -1,6 +1,6 @@
-<?xml version="1.0" ?>
+﻿<?xml version="1.0" ?>
 <sdf version="1.6">
-  <world name="telos_warehouse_world">
+  <world name="turtle_warehouse_world">
     <include><uri>model://sun</uri></include>
     <include><uri>model://ground_plane</uri></include>
 

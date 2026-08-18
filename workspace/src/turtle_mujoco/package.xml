@@ -1,9 +1,9 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>telos_navigation</name>
+  <name>turtle_mujoco</name>
   <version>0.0.0</version>
-  <description>The telos_navigation package for ADAS Telos project.</description>
+  <description>The turtle_mujoco package for ADAS turtle project.</description>
   <maintainer email="user@todo.todo">User</maintainer>
   <license>Apache License 2.0</license>
 

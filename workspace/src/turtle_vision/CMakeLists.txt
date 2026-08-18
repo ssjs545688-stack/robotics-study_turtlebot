@@ -1,5 +1,5 @@
-cmake_minimum_required(VERSION 3.8)
-project(telos_gazebo)
+﻿cmake_minimum_required(VERSION 3.8)
+project(turtle_vision)
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
@@ -10,6 +10,8 @@ find_package(rclcpp REQUIRED)
 
 # add_executable(...)
 # ament_target_dependencies(...)
+
+install(PROGRAMS src/yolo_node.py DESTINATION lib/${PROJECT_NAME})
 
 install(DIRECTORY
   launch

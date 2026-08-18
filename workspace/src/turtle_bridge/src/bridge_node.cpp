@@ -1,20 +1,20 @@
-#include <memory>
+﻿#include <memory>
 #include "rclcpp/rclcpp.hpp"
 #include "std_msgs/msg/string.hpp"
 // #include <mujoco/mujoco.h>
 
-class TelosBridgeNode : public rclcpp::Node
+class turtleBridgeNode : public rclcpp::Node
 {
 public:
-  TelosBridgeNode()
-  : Node("telos_bridge")
+  turtleBridgeNode()
+  : Node("turtle_bridge")
   {
     // Gazebo와 MuJoCo 간의 상태를 동기화하기 위한 타이머 및 퍼블리셔/서브스크라이버 설정
     RCLCPP_INFO(this->get_logger(), "Initializing Gazebo-MuJoCo Hybrid Bridge Node");
     
     timer_ = this->create_wall_timer(
       std::chrono::milliseconds(10), // 100Hz 동기화 루프
-      std::bind(&TelosBridgeNode::sync_step, this));
+      std::bind(&turtleBridgeNode::sync_step, this));
   }
 
 private:
@@ -32,7 +32,7 @@ private:
 int main(int argc, char * argv[])
 {
   rclcpp::init(argc, argv);
-  rclcpp::spin(std::make_shared<TelosBridgeNode>());
+  rclcpp::spin(std::make_shared<turtleBridgeNode>());
   rclcpp::shutdown();
   return 0;
 }

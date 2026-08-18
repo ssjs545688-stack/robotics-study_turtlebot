@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 import rclpy
 from rclpy.node import Node
 from sensor_msgs.msg import Image
@@ -18,14 +18,14 @@ class YoloVisionNode(Node):
             self.image_callback,
             10
         )
-        self.publisher_ = self.create_publisher(Image, '/telos_vision/yolo_result', 10)
+        self.publisher_ = self.create_publisher(Image, '/turtle_vision/yolo_result', 10)
 
     def image_callback(self, msg):
         # 1. ROS Image를 OpenCV 이미지로 변환 (CvBridge)
         # 2. YOLO 추론 수행 (self.model(cv_image))
         # 3. 인식된 Bounding Box 그리기
         # 4. 작업자(Person) 또는 박스(Box) 인식 시 FMS로 상태 퍼블리시
-        # 5. 결과를 /telos_vision/yolo_result 에 퍼블리시
+        # 5. 결과를 /turtle_vision/yolo_result 에 퍼블리시
         # self.get_logger().debug('Processing image frame...')
         pass
 
