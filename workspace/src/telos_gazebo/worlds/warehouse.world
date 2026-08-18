@@ -1,0 +1,51 @@
+<?xml version="1.0" ?>
+<sdf version="1.6">
+  <world name="telos_warehouse_world">
+    <include><uri>model://sun</uri></include>
+    <include><uri>model://ground_plane</uri></include>
+
+    <!-- 외벽 -->
+    <model name="wall_north">
+      <pose>0 10 1 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>20 0.2 2</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>20 0.2 2</size></box></geometry></visual>
+      </link>
+      <static>true</static>
+    </model>
+    <model name="wall_south">
+      <pose>0 -10 1 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>20 0.2 2</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>20 0.2 2</size></box></geometry></visual>
+      </link>
+      <static>true</static>
+    </model>
+    <model name="wall_east">
+      <pose>10 0 1 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>0.2 20 2</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>0.2 20 2</size></box></geometry></visual>
+      </link>
+      <static>true</static>
+    </model>
+    <model name="wall_west">
+      <pose>-10 0 1 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>0.2 20 2</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>0.2 20 2</size></box></geometry></visual>
+      </link>
+      <static>true</static>
+    </model>
+
+    <!-- 내부 장애물 (교차로 및 병목 구간 형성) -->
+    <model name="obstacle_center">
+      <pose>0 0 1 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>4 4 2</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>4 4 2</size></box></geometry></visual>
+      </link>
+      <static>true</static>
+    </model>
+  </world>
+</sdf>

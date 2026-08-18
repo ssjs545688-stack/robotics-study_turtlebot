@@ -1,0 +1,42 @@
+services:
+  robotics-sim:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    image: ros2-gazebo-mujoco:latest
+    container_name: robotics-sim
+
+    stdin_open: true
+    tty: true
+
+    environment:
+      - DISPLAY=host.docker.internal:0.0
+      - QT_X11_NO_MITSHM=1
+      - LIBGL_ALWAYS_SOFTWARE=1
+      - ROS_DOMAIN_ID=10
+      - RMW_IMPLEMENTATION=rmw_fastrtps_cpp
+      - TURTLEBOT3_MODEL=waffle_pi
+      - MUJOCO_GL=glfw
+      - TZ=Asia/Seoul
+
+    volumes:
+      # ROS2 작업공간
+      - ./workspace:/root/ros2_ws
+
+      # MuJoCo 프로젝트
+      - ./mujoco:/root/mujoco_ws
+
+      # 프로젝트 코드
+      - ./project:/root/project
+
+    working_dir: /root/ros2_ws
+
+    privileged: true
+
+    networks:
+      - rosnet
+
+networks:
+  rosnet:
+    driver: bridge

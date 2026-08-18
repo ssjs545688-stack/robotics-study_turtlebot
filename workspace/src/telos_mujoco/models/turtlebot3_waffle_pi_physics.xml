@@ -1,0 +1,24 @@
+<mujoco model="turtlebot3_waffle_pi_physics">
+  <!-- 물리 시뮬레이션 파라미터 튜닝을 위한 템플릿 -->
+  <compiler angle="radian"/>
+  <option timestep="0.002" gravity="0 0 -9.81"/>
+  
+  <default>
+    <geom friction="1.2 0.005 0.0001"/> <!-- 터틀봇 바퀴와 바닥면의 고마찰 계수 설정 -->
+  </default>
+
+  <worldbody>
+    <!-- 터틀봇 베이스 링크 모사 (질량 중심 및 서스펜션 특성) -->
+    <body name="base_footprint" pos="0 0 0.01">
+      <freejoint/>
+      <geom type="box" size="0.14 0.14 0.04" mass="1.8" pos="0 0 0.05"/>
+      
+      <!-- 적재함(상단) -->
+      <body name="cargo_tray" pos="0 0 0.15">
+        <!-- 화물이 적재될 때의 충격량을 받아내는 서스펜션 효과 모사 (조인트 강성) -->
+        <joint type="slide" axis="0 0 1" stiffness="500" damping="50"/>
+        <geom type="box" size="0.1 0.1 0.01" mass="0.1"/>
+      </body>
+    </body>
+  </worldbody>
+</mujoco>

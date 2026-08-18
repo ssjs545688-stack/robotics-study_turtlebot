@@ -1,0 +1,16 @@
+# ROS 2 build artifacts
+workspace/build/
+workspace/install/
+workspace/log/
+
+# Python
+__pycache__/
+*.pyc
+
+# Docker/OS
+.DS_Store
+
+# Editor
+.vscode/
+.idea/
+.qodo/

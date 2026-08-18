@@ -1,0 +1,15 @@
+<mujoco model="box_3kg">
+  <compiler angle="radian"/>
+  <option timestep="0.002" gravity="0 0 -9.81"/>
+  
+  <asset>
+    <material name="box_mat" rgba="0.8 0.5 0.1 1"/>
+  </asset>
+
+  <worldbody>
+    <body name="box" pos="0 0 0.5">
+      <freejoint/>
+      <geom type="box" size="0.2 0.2 0.2" mass="3.0" material="box_mat" friction="1 0.5 0.0001"/>
+    </body>
+  </worldbody>
+</mujoco>
