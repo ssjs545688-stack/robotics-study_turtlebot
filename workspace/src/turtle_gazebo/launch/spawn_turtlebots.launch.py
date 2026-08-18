@@ -42,16 +42,29 @@ def generate_launch_description():
             output='screen',
         )
 
+        urdf_file_path = os.path.join(
+            get_package_share_directory('turtlebot3_description'),
+            'urdf',
+            f'turtlebot3_{TURTLEBOT3_MODEL}.urdf'
+        )
+        
+        with open(urdf_file_path, 'r') as infp:
+            robot_desc = infp.read()
+
         robot_state_publisher_cmd = Node(
             package='robot_state_publisher',
             executable='robot_state_publisher',
             name='robot_state_publisher',
             namespace=robot['name'],
             output='screen',
-            parameters=[{'use_sim_time': True}]
+            parameters=[{
+                'use_sim_time': True,
+                'robot_description': robot_desc,
+                'frame_prefix': robot['name'] + '/'
+            }]
         )
 
         ld.add_action(spawn_turtlebot_cmd)
-        # ld.add_action(robot_state_publisher_cmd) # Requires full URDF processing
+        ld.add_action(robot_state_publisher_cmd)
 
     return ld

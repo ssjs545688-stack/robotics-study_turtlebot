@@ -1,51 +1,1204 @@
-﻿<?xml version="1.0" ?>
+<?xml version="1.0" ?>
 <sdf version="1.6">
   <world name="turtle_warehouse_world">
-    <include><uri>model://sun</uri></include>
-    <include><uri>model://ground_plane</uri></include>
 
-    <!-- 외벽 -->
+    <!-- 물리 엔진 설정 -->
+    <physics type="ode">
+      <real_time_update_rate>1000.0</real_time_update_rate>
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1</real_time_factor>
+    </physics>
+
+    <!-- 조명 -->
+    <light name="sun" type="directional">
+      <cast_shadows>true</cast_shadows>
+      <pose>0 0 10 0 0 0</pose>
+      <diffuse>0.85 0.85 0.85 1</diffuse>
+      <specular>0.2 0.2 0.2 1</specular>
+      <attenuation>
+        <range>1000</range>
+        <constant>0.9</constant>
+        <linear>0.01</linear>
+        <quadratic>0.001</quadratic>
+      </attenuation>
+      <direction>-0.5 0.1 -0.9</direction>
+    </light>
+
+    <!-- 실내 형광등 효과 -->
+    <light name="light_center" type="point">
+      <pose>0 0 4 0 0 0</pose>
+      <diffuse>0.7 0.7 0.7 1</diffuse>
+      <attenuation>
+        <range>20</range>
+        <constant>0.5</constant>
+        <linear>0.1</linear>
+      </attenuation>
+    </light>
+    <light name="light_nw" type="point">
+      <pose>-6 6 4 0 0 0</pose>
+      <diffuse>0.6 0.6 0.6 1</diffuse>
+      <attenuation>
+        <range>15</range>
+        <constant>0.5</constant>
+        <linear>0.1</linear>
+      </attenuation>
+    </light>
+    <light name="light_ne" type="point">
+      <pose>6 6 4 0 0 0</pose>
+      <diffuse>0.6 0.6 0.6 1</diffuse>
+      <attenuation>
+        <range>15</range>
+        <constant>0.5</constant>
+        <linear>0.1</linear>
+      </attenuation>
+    </light>
+    <light name="light_se" type="point">
+      <pose>6 -6 4 0 0 0</pose>
+      <diffuse>0.6 0.6 0.6 1</diffuse>
+      <attenuation>
+        <range>15</range>
+        <constant>0.5</constant>
+        <linear>0.1</linear>
+      </attenuation>
+    </light>
+
+    <!-- 바닥 -->
+    <model name="ground_plane">
+      <static>true</static>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>40 40</size>
+            </plane>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>40 40</size>
+            </plane>
+          </geometry>
+          <material>
+            <script>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+              <name>Gazebo/Bricks</name>
+            </script>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ============================================================ -->
+    <!-- 외벽 (Outer Walls)  20m x 20m 창고                           -->
+    <!-- ============================================================ -->
+
     <model name="wall_north">
-      <pose>0 10 1 0 0 0</pose>
-      <link name="link">
-        <collision name="collision"><geometry><box><size>20 0.2 2</size></box></geometry></collision>
-        <visual name="visual"><geometry><box><size>20 0.2 2</size></box></geometry></visual>
-      </link>
       <static>true</static>
-    </model>
-    <model name="wall_south">
-      <pose>0 -10 1 0 0 0</pose>
+      <pose>0 10 1.25 0 0 0</pose>
       <link name="link">
-        <collision name="collision"><geometry><box><size>20 0.2 2</size></box></geometry></collision>
-        <visual name="visual"><geometry><box><size>20 0.2 2</size></box></geometry></visual>
+        <collision name="c">
+          <geometry>
+            <box>
+              <size>20.4 0.3 2.5</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="v">
+          <geometry>
+            <box>
+              <size>20.4 0.3 2.5</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+              <name>Gazebo/White</name>
+            </script>
+          </material>
+        </visual>
       </link>
-      <static>true</static>
-    </model>
-    <model name="wall_east">
-      <pose>10 0 1 0 0 0</pose>
-      <link name="link">
-        <collision name="collision"><geometry><box><size>0.2 20 2</size></box></geometry></collision>
-        <visual name="visual"><geometry><box><size>0.2 20 2</size></box></geometry></visual>
-      </link>
-      <static>true</static>
-    </model>
-    <model name="wall_west">
-      <pose>-10 0 1 0 0 0</pose>
-      <link name="link">
-        <collision name="collision"><geometry><box><size>0.2 20 2</size></box></geometry></collision>
-        <visual name="visual"><geometry><box><size>0.2 20 2</size></box></geometry></visual>
-      </link>
-      <static>true</static>
     </model>
 
-    <!-- 내부 장애물 (교차로 및 병목 구간 형성) -->
-    <model name="obstacle_center">
-      <pose>0 0 1 0 0 0</pose>
-      <link name="link">
-        <collision name="collision"><geometry><box><size>4 4 2</size></box></geometry></collision>
-        <visual name="visual"><geometry><box><size>4 4 2</size></box></geometry></visual>
-      </link>
+    <model name="wall_south">
       <static>true</static>
+      <pose>0 -10 1.25 0 0 0</pose>
+      <link name="link">
+        <collision name="c">
+          <geometry>
+            <box>
+              <size>20.4 0.3 2.5</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="v">
+          <geometry>
+            <box>
+              <size>20.4 0.3 2.5</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+              <name>Gazebo/White</name>
+            </script>
+          </material>
+        </visual>
+      </link>
     </model>
+
+    <model name="wall_east">
+      <static>true</static>
+      <pose>10 0 1.25 0 0 0</pose>
+      <link name="link">
+        <collision name="c">
+          <geometry>
+            <box>
+              <size>0.3 20 2.5</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="v">
+          <geometry>
+            <box>
+              <size>0.3 20 2.5</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+              <name>Gazebo/White</name>
+            </script>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="wall_west">
+      <static>true</static>
+      <pose>-10 0 1.25 0 0 0</pose>
+      <link name="link">
+        <collision name="c">
+          <geometry>
+            <box>
+              <size>0.3 20 2.5</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="v">
+          <geometry>
+            <box>
+              <size>0.3 20 2.5</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+              <name>Gazebo/White</name>
+            </script>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ============================================================ -->
+    <!-- 내부 구획 (적재 구역 분리벽 + 병목 구간 벽)                     -->
+    <!-- ============================================================ -->
+
+    <!-- 적재 구역 분리벽: 서쪽에서 -5.5 x축으로 북쪽 구역 분리 -->
+    <model name="inner_wall_loading_sep">
+      <static>true</static>
+      <pose>-5.5 6 1.25 0 0 0</pose>
+      <link name="link">
+        <collision name="c">
+          <geometry>
+            <box>
+              <size>0.2 8 2.5</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="v">
+          <geometry>
+            <box>
+              <size>0.2 8 2.5</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+              <name>Gazebo/Grey</name>
+            </script>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- 병목 구간 북쪽 벽: 교차로 양보 테스트용 좁은 통로 형성 -->
+    <!-- y=2~9 사이를 막아, y=-2~2 사이 약 1.5m 통로만 남김 -->
+    <model name="bottleneck_wall_north">
+      <static>true</static>
+      <pose>3.5 6 1.25 0 0 0</pose>
+      <link name="link">
+        <collision name="c">
+          <geometry>
+            <box>
+              <size>0.2 8 2.5</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="v">
+          <geometry>
+            <box>
+              <size>0.2 8 2.5</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+              <name>Gazebo/Grey</name>
+            </script>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- 병목 구간 남쪽 벽 -->
+    <model name="bottleneck_wall_south">
+      <static>true</static>
+      <pose>3.5 -6 1.25 0 0 0</pose>
+      <link name="link">
+        <collision name="c">
+          <geometry>
+            <box>
+              <size>0.2 8 2.5</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="v">
+          <geometry>
+            <box>
+              <size>0.2 8 2.5</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+              <name>Gazebo/Grey</name>
+            </script>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ============================================================ -->
+    <!-- 선반 Row A (x = -4)   선반 높이 1.8m, 폭 0.4m                -->
+    <!-- ============================================================ -->
+
+    <model name="shelf_A1">
+      <static>true</static>
+      <pose>-4 -7.5 0.9 0 0 0</pose>
+      <link name="link">
+        <collision name="c">
+          <geometry>
+            <box>
+              <size>0.4 2.5 1.8</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="v">
+          <geometry>
+            <box>
+              <size>0.4 2.5 1.8</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+              <name>Gazebo/Wood</name>
+            </script>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="shelf_A2">
+      <static>true</static>
+      <pose>-4 -3.5 0.9 0 0 0</pose>
+      <link name="link">
+        <collision name="c">
+          <geometry>
+            <box>
+              <size>0.4 2.5 1.8</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="v">
+          <geometry>
+            <box>
+              <size>0.4 2.5 1.8</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+              <name>Gazebo/Wood</name>
+            </script>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="shelf_A3">
+      <static>true</static>
+      <pose>-4 0.5 0.9 0 0 0</pose>
+      <link name="link">
+        <collision name="c">
+          <geometry>
+            <box>
+              <size>0.4 2.5 1.8</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="v">
+          <geometry>
+            <box>
+              <size>0.4 2.5 1.8</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+              <name>Gazebo/Wood</name>
+            </script>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ============================================================ -->
+    <!-- 선반 Row B (x = 0)                                           -->
+    <!-- ============================================================ -->
+
+    <model name="shelf_B1">
+      <static>true</static>
+      <pose>0 -7.5 0.9 0 0 0</pose>
+      <link name="link">
+        <collision name="c">
+          <geometry>
+            <box>
+              <size>0.4 2.5 1.8</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="v">
+          <geometry>
+            <box>
+              <size>0.4 2.5 1.8</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+              <name>Gazebo/Wood</name>
+            </script>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="shelf_B2">
+      <static>true</static>
+      <pose>0 -3.5 0.9 0 0 0</pose>
+      <link name="link">
+        <collision name="c">
+          <geometry>
+            <box>
+              <size>0.4 2.5 1.8</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="v">
+          <geometry>
+            <box>
+              <size>0.4 2.5 1.8</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+              <name>Gazebo/Wood</name>
+            </script>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="shelf_B3">
+      <static>true</static>
+      <pose>0 0.5 0.9 0 0 0</pose>
+      <link name="link">
+        <collision name="c">
+          <geometry>
+            <box>
+              <size>0.4 2.5 1.8</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="v">
+          <geometry>
+            <box>
+              <size>0.4 2.5 1.8</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+              <name>Gazebo/Wood</name>
+            </script>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ============================================================ -->
+    <!-- 기둥 (Support Pillars) - 원통형, 6개                          -->
+    <!-- ============================================================ -->
+
+    <model name="pillar_1">
+      <static>true</static>
+      <pose>-7 3 1.25 0 0 0</pose>
+      <link name="link">
+        <collision name="c">
+          <geometry>
+            <cylinder>
+              <radius>0.15</radius>
+              <length>2.5</length>
+            </cylinder>
+          </geometry>
+        </collision>
+        <visual name="v">
+          <geometry>
+            <cylinder>
+              <radius>0.15</radius>
+              <length>2.5</length>
+            </cylinder>
+          </geometry>
+          <material>
+            <script>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+              <name>Gazebo/DarkGrey</name>
+            </script>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="pillar_2">
+      <static>true</static>
+      <pose>-7 -3 1.25 0 0 0</pose>
+      <link name="link">
+        <collision name="c">
+          <geometry>
+            <cylinder>
+              <radius>0.15</radius>
+              <length>2.5</length>
+            </cylinder>
+          </geometry>
+        </collision>
+        <visual name="v">
+          <geometry>
+            <cylinder>
+              <radius>0.15</radius>
+              <length>2.5</length>
+            </cylinder>
+          </geometry>
+          <material>
+            <script>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+              <name>Gazebo/DarkGrey</name>
+            </script>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="pillar_3">
+      <static>true</static>
+      <pose>-2 3 1.25 0 0 0</pose>
+      <link name="link">
+        <collision name="c">
+          <geometry>
+            <cylinder>
+              <radius>0.15</radius>
+              <length>2.5</length>
+            </cylinder>
+          </geometry>
+        </collision>
+        <visual name="v">
+          <geometry>
+            <cylinder>
+              <radius>0.15</radius>
+              <length>2.5</length>
+            </cylinder>
+          </geometry>
+          <material>
+            <script>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+              <name>Gazebo/DarkGrey</name>
+            </script>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="pillar_4">
+      <static>true</static>
+      <pose>-2 -3 1.25 0 0 0</pose>
+      <link name="link">
+        <collision name="c">
+          <geometry>
+            <cylinder>
+              <radius>0.15</radius>
+              <length>2.5</length>
+            </cylinder>
+          </geometry>
+        </collision>
+        <visual name="v">
+          <geometry>
+            <cylinder>
+              <radius>0.15</radius>
+              <length>2.5</length>
+            </cylinder>
+          </geometry>
+          <material>
+            <script>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+              <name>Gazebo/DarkGrey</name>
+            </script>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="pillar_5">
+      <static>true</static>
+      <pose>2 3 1.25 0 0 0</pose>
+      <link name="link">
+        <collision name="c">
+          <geometry>
+            <cylinder>
+              <radius>0.15</radius>
+              <length>2.5</length>
+            </cylinder>
+          </geometry>
+        </collision>
+        <visual name="v">
+          <geometry>
+            <cylinder>
+              <radius>0.15</radius>
+              <length>2.5</length>
+            </cylinder>
+          </geometry>
+          <material>
+            <script>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+              <name>Gazebo/DarkGrey</name>
+            </script>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="pillar_6">
+      <static>true</static>
+      <pose>2 -3 1.25 0 0 0</pose>
+      <link name="link">
+        <collision name="c">
+          <geometry>
+            <cylinder>
+              <radius>0.15</radius>
+              <length>2.5</length>
+            </cylinder>
+          </geometry>
+        </collision>
+        <visual name="v">
+          <geometry>
+            <cylinder>
+              <radius>0.15</radius>
+              <length>2.5</length>
+            </cylinder>
+          </geometry>
+          <material>
+            <script>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+              <name>Gazebo/DarkGrey</name>
+            </script>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ============================================================ -->
+    <!-- 팔레트 스택 (Pallet Stacks)                                   -->
+    <!-- ============================================================ -->
+
+    <model name="pallet_1">
+      <static>true</static>
+      <pose>-7.5 4.0 0.3 0 0 0</pose>
+      <link name="link">
+        <collision name="c">
+          <geometry>
+            <box>
+              <size>0.8 1.2 0.6</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="v">
+          <geometry>
+            <box>
+              <size>0.8 1.2 0.6</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+              <name>Gazebo/Wood</name>
+            </script>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="pallet_2">
+      <static>true</static>
+      <pose>-7.5 2.5 0.3 0 0 0</pose>
+      <link name="link">
+        <collision name="c">
+          <geometry>
+            <box>
+              <size>0.8 1.2 0.6</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="v">
+          <geometry>
+            <box>
+              <size>0.8 1.2 0.6</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+              <name>Gazebo/Wood</name>
+            </script>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="pallet_3">
+      <static>true</static>
+      <pose>-7.5 1.0 0.3 0 0 0</pose>
+      <link name="link">
+        <collision name="c">
+          <geometry>
+            <box>
+              <size>0.8 1.2 0.6</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="v">
+          <geometry>
+            <box>
+              <size>0.8 1.2 0.6</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+              <name>Gazebo/Wood</name>
+            </script>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ============================================================ -->
+    <!-- 박스 더미 / 물류 자재 장애물                                    -->
+    <!-- ============================================================ -->
+
+    <!-- 통로 측면 박스 더미 -->
+    <model name="box_pile_1">
+      <static>true</static>
+      <pose>-2.5 8.5 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="c">
+          <geometry>
+            <box>
+              <size>1.0 0.8 0.5</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="v">
+          <geometry>
+            <box>
+              <size>1.0 0.8 0.5</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.2 0.4 0.8 1</ambient>
+            <diffuse>0.2 0.4 0.8 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="box_pile_2">
+      <static>true</static>
+      <pose>1.5 8.5 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="c">
+          <geometry>
+            <box>
+              <size>1.0 0.8 0.5</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="v">
+          <geometry>
+            <box>
+              <size>1.0 0.8 0.5</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.2 0.4 0.8 1</ambient>
+            <diffuse>0.2 0.4 0.8 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- 하역 구역 근처 박스 -->
+    <model name="box_pile_3">
+      <static>true</static>
+      <pose>6.5 4.5 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="c">
+          <geometry>
+            <box>
+              <size>0.6 0.6 0.5</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="v">
+          <geometry>
+            <box>
+              <size>0.6 0.6 0.5</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.9 0.4 0 1</ambient>
+            <diffuse>0.9 0.4 0 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="box_pile_4">
+      <static>true</static>
+      <pose>6.5 -4.5 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="c">
+          <geometry>
+            <box>
+              <size>0.6 0.6 0.5</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="v">
+          <geometry>
+            <box>
+              <size>0.6 0.6 0.5</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.9 0.4 0 1</ambient>
+            <diffuse>0.9 0.4 0 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- 선반 위 물류 박스 (작은 박스들) -->
+    <model name="shelf_box_1">
+      <static>true</static>
+      <pose>-4 -7.5 1.95 0 0 0</pose>
+      <link name="link">
+        <collision name="c">
+          <geometry>
+            <box>
+              <size>0.35 0.4 0.3</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="v">
+          <geometry>
+            <box>
+              <size>0.35 0.4 0.3</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.8 0.1 0.1 1</ambient>
+            <diffuse>0.8 0.1 0.1 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="shelf_box_2">
+      <static>true</static>
+      <pose>0 -3.5 1.95 0 0 0</pose>
+      <link name="link">
+        <collision name="c">
+          <geometry>
+            <box>
+              <size>0.35 0.4 0.3</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="v">
+          <geometry>
+            <box>
+              <size>0.35 0.4 0.3</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.1 0.7 0.1 1</ambient>
+            <diffuse>0.1 0.7 0.1 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="shelf_box_3">
+      <static>true</static>
+      <pose>-4 0.5 1.95 0 0 0</pose>
+      <link name="link">
+        <collision name="c">
+          <geometry>
+            <box>
+              <size>0.35 0.4 0.3</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="v">
+          <geometry>
+            <box>
+              <size>0.35 0.4 0.3</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.9 0.8 0 1</ambient>
+            <diffuse>0.9 0.8 0 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- 통로 장애물 드럼통 -->
+    <model name="drum_1">
+      <static>true</static>
+      <pose>-1.5 -9 0.45 0 0 0</pose>
+      <link name="link">
+        <collision name="c">
+          <geometry>
+            <cylinder>
+              <radius>0.22</radius>
+              <length>0.9</length>
+            </cylinder>
+          </geometry>
+        </collision>
+        <visual name="v">
+          <geometry>
+            <cylinder>
+              <radius>0.22</radius>
+              <length>0.9</length>
+            </cylinder>
+          </geometry>
+          <material>
+            <ambient>0.1 0.1 0.7 1</ambient>
+            <diffuse>0.1 0.1 0.7 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="drum_2">
+      <static>true</static>
+      <pose>-0.5 -9 0.45 0 0 0</pose>
+      <link name="link">
+        <collision name="c">
+          <geometry>
+            <cylinder>
+              <radius>0.22</radius>
+              <length>0.9</length>
+            </cylinder>
+          </geometry>
+        </collision>
+        <visual name="v">
+          <geometry>
+            <cylinder>
+              <radius>0.22</radius>
+              <length>0.9</length>
+            </cylinder>
+          </geometry>
+          <material>
+            <ambient>0.7 0.1 0.1 1</ambient>
+            <diffuse>0.7 0.1 0.1 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ============================================================ -->
+    <!-- 구역 바닥 마커 (Zone Floor Markers)                           -->
+    <!-- ============================================================ -->
+
+    <!-- 대기/충전 구역 (파란색) -->
+    <model name="zone_standby">
+      <static>true</static>
+      <pose>-8 -8 0.01 0 0 0</pose>
+      <link name="link">
+        <collision name="c">
+          <geometry>
+            <box>
+              <size>3.5 3.5 0.02</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="v">
+          <geometry>
+            <box>
+              <size>3.5 3.5 0.02</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0 0.2 0.9 0.6</ambient>
+            <diffuse>0 0.2 0.9 0.6</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- 적재 구역 (노란색) -->
+    <model name="zone_loading">
+      <static>true</static>
+      <pose>-7.5 8.5 0.01 0 0 0</pose>
+      <link name="link">
+        <collision name="c">
+          <geometry>
+            <box>
+              <size>4.5 2 0.02</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="v">
+          <geometry>
+            <box>
+              <size>4.5 2 0.02</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.9 0.9 0 0.6</ambient>
+            <diffuse>0.9 0.9 0 0.6</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- 하역 구역 A (빨간색) -->
+    <model name="zone_unload_A">
+      <static>true</static>
+      <pose>8.5 7.5 0.01 0 0 0</pose>
+      <link name="link">
+        <collision name="c">
+          <geometry>
+            <box>
+              <size>2 3 0.02</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="v">
+          <geometry>
+            <box>
+              <size>2 3 0.02</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.9 0.1 0.1 0.6</ambient>
+            <diffuse>0.9 0.1 0.1 0.6</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- 하역 구역 B (초록색) -->
+    <model name="zone_unload_B">
+      <static>true</static>
+      <pose>8.5 0 0.01 0 0 0</pose>
+      <link name="link">
+        <collision name="c">
+          <geometry>
+            <box>
+              <size>2 3 0.02</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="v">
+          <geometry>
+            <box>
+              <size>2 3 0.02</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.1 0.9 0.1 0.6</ambient>
+            <diffuse>0.1 0.9 0.1 0.6</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- 하역 구역 C (보라색) -->
+    <model name="zone_unload_C">
+      <static>true</static>
+      <pose>8.5 -7.5 0.01 0 0 0</pose>
+      <link name="link">
+        <collision name="c">
+          <geometry>
+            <box>
+              <size>2 3 0.02</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="v">
+          <geometry>
+            <box>
+              <size>2 3 0.02</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.6 0.1 0.9 0.6</ambient>
+            <diffuse>0.6 0.1 0.9 0.6</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ============================================================ -->
+    <!-- 충전 스테이션 (Charging Stations) - 노란 단말기 형태          -->
+    <!-- ============================================================ -->
+
+    <model name="charging_sta_1">
+      <static>true</static>
+      <pose>-9 -8.5 0.15 0 0 0</pose>
+      <link name="link">
+        <collision name="c">
+          <geometry>
+            <box>
+              <size>0.4 0.25 0.3</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="v">
+          <geometry>
+            <box>
+              <size>0.4 0.25 0.3</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>1 1 0 1</ambient>
+            <diffuse>1 1 0 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="charging_sta_2">
+      <static>true</static>
+      <pose>-9 -7.5 0.15 0 0 0</pose>
+      <link name="link">
+        <collision name="c">
+          <geometry>
+            <box>
+              <size>0.4 0.25 0.3</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="v">
+          <geometry>
+            <box>
+              <size>0.4 0.25 0.3</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>1 1 0 1</ambient>
+            <diffuse>1 1 0 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="charging_sta_3">
+      <static>true</static>
+      <pose>-9 -6.5 0.15 0 0 0</pose>
+      <link name="link">
+        <collision name="c">
+          <geometry>
+            <box>
+              <size>0.4 0.25 0.3</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="v">
+          <geometry>
+            <box>
+              <size>0.4 0.25 0.3</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>1 1 0 1</ambient>
+            <diffuse>1 1 0 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="charging_sta_4">
+      <static>true</static>
+      <pose>-9 -5.5 0.15 0 0 0</pose>
+      <link name="link">
+        <collision name="c">
+          <geometry>
+            <box>
+              <size>0.4 0.25 0.3</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="v">
+          <geometry>
+            <box>
+              <size>0.4 0.25 0.3</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>1 1 0 1</ambient>
+            <diffuse>1 1 0 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
   </world>
 </sdf>
