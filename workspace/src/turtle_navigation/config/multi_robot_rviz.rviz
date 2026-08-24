@@ -1,0 +1,180 @@
+﻿Panels:
+  - Class: rviz_common/Displays
+    Help Height: 78
+    Name: Displays
+    Property Tree Widget:
+      Expanded:
+        - /Global Options1
+        - /TF1
+      Splitter Ratio: 0.5
+    Tree Height: 600
+  - Class: rviz_common/Selection
+    Name: Selection
+  - Class: rviz_common/Tool Properties
+    Name: Tool Properties
+    Splitter Ratio: 0.5886790156364441
+  - Class: rviz_common/Views
+    Name: Views
+    Splitter Ratio: 0.5
+Visualization Manager:
+  Class: ""
+  Displays:
+    - Alpha: 0.5
+      Cell Size: 1
+      Class: rviz_default_plugins/Grid
+      Color: 160; 160; 164
+      Enabled: true
+      Name: Grid
+      Plane: XY
+      Plane Cell Count: 30
+      Reference Frame: <Fixed Frame>
+      Value: true
+
+    - Class: rviz_default_plugins/TF
+      Enabled: true
+      Frame Timeout: 15
+      Name: TF
+      Show Arrows: true
+      Show Axes: true
+      Show Names: true
+      Value: true
+
+    - Alpha: 1
+      Class: rviz_default_plugins/LaserScan
+      Color: 255; 0; 0
+      Color Transformer: FlatColor
+      Decay Time: 0
+      Enabled: true
+      Name: tb1 LaserScan
+      Size (Pixels): 3
+      Style: Points
+      Topic:
+        Reliability Policy: Reliable
+        Value: /tb1/scan
+      Value: true
+
+    - Alpha: 1
+      Class: rviz_default_plugins/LaserScan
+      Color: 0; 255; 0
+      Color Transformer: FlatColor
+      Decay Time: 0
+      Enabled: true
+      Name: tb2 LaserScan
+      Size (Pixels): 3
+      Style: Points
+      Topic:
+        Reliability Policy: Reliable
+        Value: /tb2/scan
+      Value: true
+
+    - Alpha: 1
+      Class: rviz_default_plugins/LaserScan
+      Color: 0; 0; 255
+      Color Transformer: FlatColor
+      Decay Time: 0
+      Enabled: true
+      Name: tb3 LaserScan
+      Size (Pixels): 3
+      Style: Points
+      Topic:
+        Reliability Policy: Reliable
+        Value: /tb3/scan
+      Value: true
+
+    - Alpha: 1
+      Class: rviz_default_plugins/LaserScan
+      Color: 255; 200; 0
+      Color Transformer: FlatColor
+      Decay Time: 0
+      Enabled: true
+      Name: tb4 LaserScan
+      Size (Pixels): 3
+      Style: Points
+      Topic:
+        Reliability Policy: Reliable
+        Value: /tb4/scan
+      Value: true
+
+    - Alpha: 1
+      Class: rviz_default_plugins/Path
+      Color: 255; 0; 0
+      Enabled: true
+      Line Style: Lines
+      Line Width: 0.03
+      Name: tb1 Nav2 Path
+      Topic:
+        Value: /tb1/plan
+      Value: true
+
+    - Alpha: 1
+      Class: rviz_default_plugins/Path
+      Color: 0; 255; 0
+      Enabled: true
+      Line Style: Lines
+      Line Width: 0.03
+      Name: tb2 Nav2 Path
+      Topic:
+        Value: /tb2/plan
+      Value: true
+
+    - Alpha: 1
+      Class: rviz_default_plugins/Path
+      Color: 0; 0; 255
+      Enabled: true
+      Line Style: Lines
+      Line Width: 0.03
+      Name: tb3 Nav2 Path
+      Topic:
+        Value: /tb3/plan
+      Value: true
+
+    - Alpha: 1
+      Class: rviz_default_plugins/Path
+      Color: 255; 200; 0
+      Enabled: true
+      Line Style: Lines
+      Line Width: 0.03
+      Name: tb4 Nav2 Path
+      Topic:
+        Value: /tb4/plan
+      Value: true
+
+  Enabled: true
+  Global Options:
+    Background Color: 48; 48; 48
+    Fixed Frame: odom
+    Frame Rate: 30
+  Name: root
+  Tools:
+    - Class: rviz_default_plugins/Interact
+      Hide Inactive Objects: true
+    - Class: rviz_default_plugins/MoveCamera
+    - Class: rviz_default_plugins/Select
+    - Class: rviz_default_plugins/SetInitialPose
+      Topic:
+        Value: /initialpose
+    - Class: rviz_default_plugins/SetGoal
+      Topic:
+        Value: /goal_pose
+  Transformation:
+    Current:
+      Class: rviz_default_plugins/TF
+  Value: true
+  Views:
+    Current:
+      Class: rviz_default_plugins/Orbit
+      Distance: 30
+      Name: Current View
+      Near Clip Distance: 0.01
+      Pan X: 0
+      Pan Y: 0
+      Pitch: 1.0
+      Target Frame: <Fixed Frame>
+      Value: Orbit (rviz)
+      Yaw: 0.0
+    Saved: ~
+Window Geometry:
+  Height: 900
+  Width: 1440
+  X: 0
+  Y: 0
