@@ -1,10 +1,9 @@
 """
 nav2_multi.launch.py — Nav2 내비게이션 스택 하위 모듈
 ======================================================
-[수정 사항]
- - PyYAML의 yaml.dump()가 한 줄 배열[...]을 여러 줄 블록(-)으로 강제 재변환하여
-   RewrittenYaml에서 critics가 유실되는 문제를 해결하기 위해,
-   텍스트 직접 읽기/치환 방식(replace)으로 파라미터 임시 파일을 생성합니다.
+[수정 내용]
+ 1. base_link 및 map 프레임 치환 구문 추가 (tb1/base_link, tb1/odom)
+ 2. Map Server 없이도 작동하도록 map -> {ns}/odom Static TF Publisher 추가
 """
 
 import os
@@ -12,17 +11,13 @@ import tempfile
 
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import (
-    DeclareLaunchArgument, OpaqueFunction,
-    IncludeLaunchDescription, GroupAction,
-)
+from launch.actions import DeclareLaunchArgument, OpaqueFunction, IncludeLaunchDescription, GroupAction
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
-from launch_ros.actions import SetRemap
+from launch_ros.actions import SetRemap, PushRosNamespace, Node
 
 
 def launch_setup(context, *args, **kwargs):
-    """OpaqueFunction 콜백: namespace를 확정한 뒤 Nav2 런치를 구성합니다."""
     ns = LaunchConfiguration('namespace').perform(context)
 
     nav2_bringup_dir = get_package_share_directory('nav2_bringup')
@@ -30,19 +25,27 @@ def launch_setup(context, *args, **kwargs):
     nav2_params_path = os.path.join(turtle_nav_dir, 'config', 'nav2_params.yaml')
 
     # ─────────────────────────────────────────────────────────────────────────
-    # Step 1: 원본 YAML을 텍스트로 직접 읽어 프레임 이름만 치환
-    # (PyYAML dump로 인한 inline 배열 formatting 파괴 방지)
+    # Step 1: YAML 텍스트 치환 (base_link, odom, map 모두 네임스페이스 적용)
     # ─────────────────────────────────────────────────────────────────────────
     with open(nav2_params_path, 'r', encoding='utf-8') as f:
         content = f.read()
 
-    # 프레임 설정 치환
-    content = content.replace('global_frame: odom', f'global_frame: {ns}/odom')
-    content = content.replace('global_frame: "odom"', f'global_frame: "{ns}/odom"')
+    # Frame ID 치환 (base_link, base_footprint, odom)
+    content = content.replace('robot_base_frame: base_link', f'robot_base_frame: {ns}/base_link')
+    content = content.replace('robot_base_frame: "base_link"', f'robot_base_frame: "{ns}/base_link"')
     content = content.replace('robot_base_frame: base_footprint', f'robot_base_frame: {ns}/base_footprint')
     content = content.replace('robot_base_frame: "base_footprint"', f'robot_base_frame: "{ns}/base_footprint"')
+    
+    content = content.replace('global_frame: odom', f'global_frame: {ns}/odom')
+    content = content.replace('global_frame: "odom"', f'global_frame: "{ns}/odom"')
+    content = content.replace('global_frame: map', f'global_frame: {ns}/odom')  # map 프레임 대신 odom 활용
+    content = content.replace('global_frame: "map"', f'global_frame: "{ns}/odom"')
+
     content = content.replace('base_frame_id: base_footprint', f'base_frame_id: {ns}/base_footprint')
     content = content.replace('base_frame_id: "base_footprint"', f'base_frame_id: "{ns}/base_footprint"')
+    content = content.replace('base_frame_id: base_link', f'base_frame_id: {ns}/base_link')
+    content = content.replace('base_frame_id: "base_link"', f'base_frame_id: "{ns}/base_link"')
+
     content = content.replace('odom_frame_id: odom', f'odom_frame_id: {ns}/odom')
     content = content.replace('odom_frame_id: "odom"', f'odom_frame_id: "{ns}/odom"')
 
@@ -56,7 +59,7 @@ def launch_setup(context, *args, **kwargs):
     params_file_path = tmp.name
 
     # ─────────────────────────────────────────────────────────────────────────
-    # Step 2: navigation_launch.py 호출
+    # Step 2: navigation_launch.py 실행 설정
     # ─────────────────────────────────────────────────────────────────────────
     nav2_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
@@ -64,7 +67,7 @@ def launch_setup(context, *args, **kwargs):
         ),
         launch_arguments={
             'namespace':       ns,
-            'use_namespace':   'True',
+            'use_namespace':   'False',
             'use_sim_time':    'True',
             'params_file':     params_file_path,
             'autostart':       'True',
@@ -73,13 +76,24 @@ def launch_setup(context, *args, **kwargs):
         }.items(),
     )
 
+    # map -> {ns}/odom 연결을 위한 Static TF Publisher 노드
+    static_tf_pub = Node(
+        package='tf2_ros',
+        executable='static_transform_publisher',
+        name='map_to_odom_publisher',
+        arguments=['0', '0', '0', '0', '0', '0', 'map', f'{ns}/odom'],
+        output='screen'
+    )
+
     # ─────────────────────────────────────────────────────────────────────────
-    # Step 3: TF 및 Clock 글로벌 연결
+    # Step 3: 네임스페이스 및 리매핑 적용
     # ─────────────────────────────────────────────────────────────────────────
     nav2_group = GroupAction([
-        SetRemap(src='tf',        dst='/tf'),
-        SetRemap(src='tf_static', dst='/tf_static'),
+        PushRosNamespace(ns),
+        SetRemap(src='/tf',        dst='tf'),
+        SetRemap(src='/tf_static', dst='tf_static'),
         SetRemap(src='clock',     dst='/clock'),
+        static_tf_pub,
         nav2_cmd,
     ])
 

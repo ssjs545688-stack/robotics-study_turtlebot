@@ -65,10 +65,11 @@ def _inject_namespace_into_sdf(sdf_content: str, ns: str) -> str:
         ros_match = re.search(r'<ros>(.*?)</ros>', body, flags=re.DOTALL)
         if ros_match:
             ros_inner = ros_match.group(1)
-            new_ros = f'<ros>{ros_inner}\n      <remapping>tf:=/tf</remapping>\n    </ros>'
+            # To allow namespace tf trees, we map absolute /tf to relative tf
+            new_ros = f'<ros>{ros_inner}\n      <remapping>/tf:=tf</remapping>\n      <remapping>/tf_static:=tf_static</remapping>\n    </ros>'
             body = re.sub(r'<ros>.*?</ros>', new_ros, body, count=1, flags=re.DOTALL)
         else:
-            body = f'    <ros>\n      <remapping>tf:=/tf</remapping>\n    </ros>\n{body}'
+            body = f'    <ros>\n      <remapping>/tf:=tf</remapping>\n      <remapping>/tf_static:=tf_static</remapping>\n    </ros>\n{body}'
             
         odom_tag = f'    <odometry_frame>{ns}/odom</odometry_frame>'
         base_tag = f'    <robot_base_frame>{ns}/base_footprint</robot_base_frame>'
@@ -146,8 +147,8 @@ def launch_setup(context, *args, **kwargs):
             'publish_frequency':  30.0,
         }],
         remappings=[
-            ('tf', '/tf'),
-            ('tf_static', '/tf_static'),
+            ('/tf', 'tf'),
+            ('/tf_static', 'tf_static'),
         ],
     )
 
