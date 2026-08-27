@@ -50,7 +50,8 @@ networks:
 ##ros2 launch turtle_navigation nav2_multi.launch.py
 ##ros2 run turtle_fms fms_node
 ##export DISPLAY=192.168.3.114:0.0
-
+##ros2 run teleop_twist_keyboard teleop_twist_keyboard \  --ros-args --remap cmd_vel:=/tb1/cmd_vel
+##rm -rf /tmp/nav2_params_* /tmp/launch_params_*
 ##colcon build
 ##source install/setup.bash
 ##source /opt/ros/humble/setup.bash

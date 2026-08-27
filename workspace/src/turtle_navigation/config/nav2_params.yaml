@@ -42,13 +42,11 @@ amcl:
 bt_navigator:
   ros__parameters:
     use_sim_time: True
-    global_frame: odom
+    global_frame: map
     robot_base_frame: base_footprint
     odom_topic: odom
-    bt_loop_duration: 10
+    bt_loop_duration: 20
     default_server_timeout: 20
-    # Humble에서 네임스페이스 환경의 backup/spin 액션 서버를 올바르게 찾기 위해
-    # NavigateThroughPoses에서 recovery를 사용하지 않는 단순 BT 파일 사용
     navigate_to_pose:
       plugin: "nav2_bt_navigator/NavigateToPoseNavigator"
     navigate_through_poses:
@@ -68,7 +66,7 @@ controller_server:
     progress_checker:
       plugin: "nav2_controller::SimpleProgressChecker"
       required_movement_radius: 0.5
-      movement_time_allowance: 10.0
+      movement_time_allowance: 30.0
     general_goal_checker:
       stateful: True
       plugin: "nav2_controller::SimpleGoalChecker"
@@ -133,7 +131,11 @@ local_costmap:
       width: 3
       height: 3
       resolution: 0.05
-      plugins: ["obstacle_layer", "inflation_layer"]
+      plugins: ["static_layer", "obstacle_layer", "inflation_layer"]
+      static_layer:
+        plugin: "nav2_costmap_2d::StaticLayer"
+        map_subscribe_transient_local: True
+        enabled: True
       obstacle_layer:
         plugin: "nav2_costmap_2d::ObstacleLayer"
         enabled: True
@@ -144,14 +146,14 @@ local_costmap:
           clearing: True
           marking: True
           data_type: "LaserScan"
-          raytrace_max_range: 3.0
+          raytrace_max_range: 5.0
           raytrace_min_range: 0.0
-          obstacle_max_range: 2.5
+          obstacle_max_range: 4.5
           obstacle_min_range: 0.0
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
         cost_scaling_factor: 3.0
-        inflation_radius: 0.55
+        inflation_radius: 0.55  # 벽 충돌 방지를 위해 확대 (0.35 → 0.55)
       always_send_full_costmap: True
 
 global_costmap:
@@ -159,7 +161,7 @@ global_costmap:
     ros__parameters:
       update_frequency: 1.0
       publish_frequency: 1.0
-      global_frame: odom
+      global_frame: map
       robot_base_frame: base_footprint
       use_sim_time: True
       robot_radius: 0.22
@@ -168,7 +170,11 @@ global_costmap:
       rolling_window: true
       width: 50
       height: 50
-      plugins: ["obstacle_layer", "inflation_layer"]
+      plugins: ["static_layer", "obstacle_layer", "inflation_layer"]
+      static_layer:
+        plugin: "nav2_costmap_2d::StaticLayer"
+        map_subscribe_transient_local: True
+        enabled: True
       obstacle_layer:
         plugin: "nav2_costmap_2d::ObstacleLayer"
         enabled: True
@@ -179,20 +185,22 @@ global_costmap:
           clearing: True
           marking: True
           data_type: "LaserScan"
-          raytrace_max_range: 3.0
+          raytrace_max_range: 5.0
           raytrace_min_range: 0.0
-          obstacle_max_range: 2.5
+          obstacle_max_range: 4.5
           obstacle_min_range: 0.0
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
         cost_scaling_factor: 3.0
-        inflation_radius: 0.55
+        inflation_radius: 0.55  # 벽 충돌 방지를 위해 확대 (0.35 → 0.55)
       always_send_full_costmap: True
 
 map_server:
   ros__parameters:
     use_sim_time: True
-    yaml_filename: ""
+    # mapping.launch.py 로 맵을 생성한 후 아래 경로에 저장됩니다.
+    # 맵이 없으면 nav2_multi.launch.py 가 자동으로 odom fallback 처리합니다.
+    yaml_filename: "warehouse_map.yaml"
 
 map_saver:
   ros__parameters:
